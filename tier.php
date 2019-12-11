@@ -1,6 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . "/imageinfo.php";
+include_once dirname(__FILE__) . "/branches.php";
 
 
 class tier
@@ -23,22 +24,34 @@ class tier
     {
     
         $head = $this->next;
-        while ($this->next != null) {
-            $this->next = $this->next->next;
+        while ($head->next != null) {
+            load_next($head);
         }
 
-        $this->next = new tier();
-        $this->next->keywords = $img['keywords'];
-        $this->next->branch_imgs = null;
-        $this->next->origin = $img['origin'];
-        $this->next->thumb = $img['thumb'];
-        $this->next->img_hash = md5($ceiling . $floor . json_encode($img));
+        $head->next = new tier();
+        $head->next->keywords = $img['keywords'];
+        $head->next->branch_imgs = null;
+        $head->next->origin = $img['origin'];
+        $head->next->thumb = $img['thumb'];
+        $head->next->img_hash = md5($ceiling . $floor . json_encode($img));
         $this->next = $head;
     }
     
     public function insert_branch(Branches $img) {
         $this->next->branch_imgs = $img;
         $this->next->branch_imgs->next = null;
+    }
+    
+    public function add_branch_img(Branches $node) {
+        
+        $head = $this->next->branch_img;
+        while ($head->next != null) {
+            load_next($head);
+        }
+        
+        $this->next->branch_img->next = $node;
+        $this->next->branch_img = $head;
+
     }
     
     public function save_dataset($filename) {
@@ -54,9 +67,11 @@ class tier
     public function load_dataset($filename) {
         $file = file_get_contents($filename);
         $node = json_decode($file);
+        $head = new tier();
         do {
-            $this->next = load_next($node);
+            $head->next = load_next($node);
         } while ($this->next != null);
+        $this->next = $head;
     }
 }
 
