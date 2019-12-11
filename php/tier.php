@@ -69,4 +69,7 @@ class tier
     }
 }
 
+$x = new tier();
+
+
 ?>

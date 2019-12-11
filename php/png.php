@@ -11,21 +11,21 @@ class PNG extends ImageInfo
 
         $filename = md5(microtime()) . rand(rand(0, 125), rand(125, 232));
 
-        resize($src, "../dataset/" . $filename, $width, $height);
-        
+        $this->resize_png($src, "../dataset/" . $filename . "0", $width, $height);
+
         $exp_first = [];
-        $img = imagecreatefrompng("../dataset/" . $filename);
+        $img = imagecreatefrompng("../dataset/" . $filename . "0");
         $exp_second = [];
         $loop_cntr = 0;
         $match = 0;
-        while (1) {
+        while ($loop_cntr < 10) {
             $img_before_scale = file_get_contents("../dataset/" . $filename . $loop_cntr);
             $hex = bin2hex($img_before_scale);
             $exp_first = explode("000000", $hex);
-            if ($exp_second > 0 && $match = count(array_intersect($exp_second, $exp_first)) < 125) {
+            if ($exp_second > 0 && $match = count(array_intersect($exp_second, $exp_first)) < 60) {
                 $j = 0;
                 // Sure there's matches, but are they congruent?
-                $gt = (count($exp_second) >= count($exp_first)) ? count($exp_second) : count($exp_first);
+                $gt = (count($exp_second) <= count($exp_first)) ? count($exp_second) : count($exp_first);
                 for ($i = 0; $i < $gt && $j < $match; $i++) {
                     if ($exp_second[$i] == $exp_first[$i]) {
                         $j++;
@@ -38,12 +38,19 @@ class PNG extends ImageInfo
                 // We took too much away
                 else if ($j <= 60) {
                     // step back one iteration
-                    $loop_cntr--;
+                    //$loop_cntr--;
                 }
                 // write to file for good
-                $scale = imagecreatefrompng("../dataset/" . $filename . $loop_cntr);
-                imgpng($scale, "../dataset/" . $filename . $loop_cntr);
+                $scale = null;
+                if (file_exists("../dataset/" . $filename . $loop_cntr)) {
+                    $scale = imagecreatefrompng("../dataset/" . $filename . $loop_cntr);
+                } else {
+                    $scale = imagecreatefrompng($src);
+                }
+
+                imagepng($scale, "../dataset/" . $filename . $loop_cntr);
                 // delete accumulated files
+                $lo = 0;
                 while ($lo < $loop_cntr && file_exists("../dataset/" . $filename . $lo)) {
                     if (unlink("../dataset/" . $filename . $lo)) {
                         $lo++;
@@ -51,12 +58,15 @@ class PNG extends ImageInfo
                         break 2;
                     }
                 }
+                break;
             }
             // if $exp_first and $exp_second have ~35 point token congruencies
             // it's still matching enough.
-            imgscale($scale, $width * 0.8);
-            imgpng($scale, "../dataset/" . $filename . $loop_cntr);
-            $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
+            imagescale($scale, $width * 0.8);
+            //imagepng($scale, "../dataset/" . $filename . $loop_cntr);
+            $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);\
+            unlink("../dataset/" . $filename . $loop_cntr);
+            file_put_contents("../dataset/" . $filename . $loop_cntr, $img_scaled);
             $hex = bin2hex($img_scaled);
             $exp_second = explode("000000", $img_scaled);
             $loop_cntr++;
@@ -75,7 +85,7 @@ class PNG extends ImageInfo
         $im = imagecreatefrompng($src);
         $tim = imagecreatetruecolor($dstw, $dsth);
         imagecopyresampled($tim, $im, 0, 0, 0, 0, $dstw, $dsth, $width, $height);
-        $tim = ImageTrueColorToPalette2($tim, false, 24);
+        $tim = $this->ImageTrueColorToPalette2($tim, false, 24);
         imagepng($tim, $dst);
         return 1;
     }
@@ -94,3 +104,7 @@ class PNG extends ImageInfo
     }
 
 }
+
+$x = new PNG();
+
+$x->find_tier("done.png");
