@@ -14,7 +14,6 @@ class PNG extends ImageInfo
         $this->resize_png($src, "../dataset/" . $filename . "0", $width, $height);
 
         $exp_first = [];
-        $img = imagecreatefrompng("../dataset/" . $filename . "0");
         $exp_second = [];
         $loop_cntr = 0;
         $match = 0;
@@ -32,24 +31,8 @@ class PNG extends ImageInfo
                         $j++;
                     }
                 }
-                // Perfect!
-                if (60 < $j) {
-                }
-
-                // We took too much away
-                else if ($j <= 60) {
-                    // step back one iteration
-                    //$loop_cntr--;
-                }
                 // write to file for good
-                $scale = null;
-                if (file_exists("../dataset/" . $filename . $loop_cntr)) {
-                    $scale = imagecreatefrompng("../dataset/" . $filename . $loop_cntr);
-                } else {
-                    $scale = imagecreatefrompng($src);
-                }
 
-                imagepng($scale, "../dataset/" . $filename . $loop_cntr);
                 // delete accumulated files
                 $lo = 0;
                 $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
@@ -69,18 +52,17 @@ class PNG extends ImageInfo
             imagescale($scale, $width * 0.8);
             //imagepng($scale, "../dataset/" . $filename . $loop_cntr);
             $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
-            //unlink("../dataset/" . $filename . $loop_cntr);
+            unlink("../dataset/" . $filename . $loop_cntr);
             $hex = bin2hex($img_scaled);
-            $exp_second = explode("000000", $img_scaled);
+            $exp_second = explode("000000", $hex);
             $loop_cntr++;
         }
         $branch = new Branches();
         $branch->origin = $src;
         $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
         $branch->thumb_img = $filename;
-        //unlink("../dataset/" . $filename . $loop_cntr);
-        //if ($new_file)
-        //    file_put_contents("../dataset/" . $filename, $img_scaled);
+        if ($new_file)
+            file_put_contents("../dataset/" . $filename, $img_scaled);
         $branch->loop_cnt = $loop_cntr;
         return $branch;
     }
