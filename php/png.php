@@ -5,7 +5,7 @@ include_once dirname(__FILE__) . "/imageinfo.php";
 class PNG extends ImageInfo
 {
 
-    public function find_tier($src)
+    public function find_tier($src, bool $new_file = false)
     {
         list($width, $height, $type, $attr) = getimagesize($src);
 
@@ -18,15 +18,16 @@ class PNG extends ImageInfo
         $exp_second = [];
         $loop_cntr = 0;
         $match = 0;
-        while ($loop_cntr < 10) {
+        $img_scaled = '';
+        while ($loop_cntr < 25) {
             $img_before_scale = file_get_contents("../dataset/" . $filename . $loop_cntr);
             $hex = bin2hex($img_before_scale);
             $exp_first = explode("000000", $hex);
             if ($exp_second > 0 && $match = count(array_intersect($exp_second, $exp_first)) < 60) {
                 $j = 0;
                 // Sure there's matches, but are they congruent?
-                $gt = (count($exp_second) <= count($exp_first)) ? count($exp_second) : count($exp_first);
-                for ($i = 0; $i < $gt && $j < $match; $i++) {
+                $lt = (count($exp_second) <= count($exp_first)) ? count($exp_second) : count($exp_first);
+                for ($i = 0; $i < $lt && $j < $match; $i++) {
                     if ($exp_second[$i] == $exp_first[$i]) {
                         $j++;
                     }
@@ -51,32 +52,37 @@ class PNG extends ImageInfo
                 imagepng($scale, "../dataset/" . $filename . $loop_cntr);
                 // delete accumulated files
                 $lo = 0;
-                while ($lo < $loop_cntr && file_exists("../dataset/" . $filename . $lo)) {
+                $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
+                while ($lo <= $loop_cntr && file_exists("../dataset/" . $filename . $lo)) {
                     if (unlink("../dataset/" . $filename . $lo)) {
                         $lo++;
                     } else {
+                        //file_put_contents("../dataset/" . $filename, $img_scaled);
                         break 2;
                     }
                 }
+                file_put_contents("../dataset/" . $filename, $img_scaled);
                 break;
             }
             // if $exp_first and $exp_second have ~35 point token congruencies
             // it's still matching enough.
             imagescale($scale, $width * 0.8);
             //imagepng($scale, "../dataset/" . $filename . $loop_cntr);
-            $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);\
-            unlink("../dataset/" . $filename . $loop_cntr);
-            file_put_contents("../dataset/" . $filename . $loop_cntr, $img_scaled);
+            $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
+            //unlink("../dataset/" . $filename . $loop_cntr);
             $hex = bin2hex($img_scaled);
             $exp_second = explode("000000", $img_scaled);
             $loop_cntr++;
         }
-        $imginfo = new ImageInfo();
-        $imginfo->origin = $src;
-        $imginfo->thumb = $filename . $loop_cntr;
-        $imginfo->loop_cnt = $loop_cntr;
-        $imginfo->match_pts = $match;
-        return $imginfo;
+        $branch = new Branches();
+        $branch->origin = $src;
+        $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
+        $branch->thumb_img = $filename;
+        //unlink("../dataset/" . $filename . $loop_cntr);
+        //if ($new_file)
+        //    file_put_contents("../dataset/" . $filename, $img_scaled);
+        $branch->loop_cnt = $loop_cntr;
+        return $branch;
     }
 
     public function resize_png($src, $dst, $dstw, $dsth)
@@ -85,7 +91,7 @@ class PNG extends ImageInfo
         $im = imagecreatefrompng($src);
         $tim = imagecreatetruecolor($dstw, $dsth);
         imagecopyresampled($tim, $im, 0, 0, 0, 0, $dstw, $dsth, $width, $height);
-        $tim = $this->ImageTrueColorToPalette2($tim, false, 24);
+        $tim = $this->ImageTrueColorToPalette2($tim, false, 2);
         imagepng($tim, $dst);
         return 1;
     }
@@ -105,6 +111,6 @@ class PNG extends ImageInfo
 
 }
 
-$x = new PNG();
+//$x = new PNG();
 
-$x->find_tier("done.png");
+//$x->find_tier("done.png");

@@ -8,8 +8,8 @@ class ImageInfo {
     public $keywords;
     public $branch_imgs;
     public $origin;
-    public $thumb;
-    public $match_pts;
+    public $thumb_dir;
+    public $thumb_img;
     
 }
 
