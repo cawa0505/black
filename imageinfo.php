@@ -1,6 +1,7 @@
 <?php
 
 
+// $this->ext->info = ImageInfo();
 class ImageInfo {
 
 
@@ -9,6 +10,7 @@ class ImageInfo {
     public $origin;
     public $thumb;
     public $match_pts;
+    
 }
 
 ?>
