@@ -33,7 +33,7 @@ class tier
         $head->next->branch_imgs = null;
         $head->next->origin = $img['origin'];
         $head->next->thumb = $img['thumb'];
-        $head->next->img_hash = md5($ceiling . $floor . json_encode($img));
+        $head->next->img_hash = md5(microtime() . json_encode($img));
         $this->next = $head;
     }
     
@@ -43,20 +43,16 @@ class tier
     }
     
     public function add_branch_img(Branches $node) {
-        
         $head = $this->next->branch_img;
         while ($head->next != null) {
             load_next($head);
         }
-        
         $this->next->branch_img->next = $node;
         $this->next->branch_img = $head;
-
     }
     
     public function save_dataset($filename) {
         file_put_contents($filename, json_encode($this));
-    
     }
     
     private function load_next(&$node) {
