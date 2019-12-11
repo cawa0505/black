@@ -36,6 +36,11 @@ class tier
         $this->next = $head;
     }
     
+    public function insert_branch(Branches $img) {
+        $this->next->branch_imgs = $img;
+        $this->next->branch_imgs->next = null;
+    }
+    
     public function save_dataset($filename) {
         file_put_contents($filename, json_encode($this));
     

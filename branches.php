@@ -7,6 +7,7 @@ class branches {
     public $origin;
     public $thumb;
     public $match_pts;
+    public $next;
 }
 
 ?>
