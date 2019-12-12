@@ -1,14 +1,15 @@
 <?php
 
-include_once(dirname(__FILE__) . "/imageinfo.php");
-include_once(dirname(__FILE__) . "/branches.php");
-include_once(dirname(__FILE__) . "/png.php");
-include_once(dirname(__FILE__) . "/tier.php");
+include_once(dirname(__FILE__) . "php/imageinfo.php");
+include_once(dirname(__FILE__) . "php/branches.php");
+include_once(dirname(__FILE__) . "php/png.php");
+include_once(dirname(__FILE__) . "php/tier.php");
 
 $x = new tier();
 $png = new PNG();
 $imginfo = new ImageInfo();
 
+$x->load_dataset("save.txt");
 //$imginfo = $png->find_tier( dirname(__FILE__) . "/../origin/baselinedesc.png", true);
 
 $branch = new branches();
