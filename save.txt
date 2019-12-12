@@ -1,1 +1,4 @@
+<<<<<<< HEAD:save.txt
 {"keywords":null,"next":{"keywords":null,"loop_cnt":null,"origin":null,"thumb_img":null,"thumb_dir":null,"match_pts":null,"next":null,"img_hash":null,"info":[{"keywords":["1","done pic"],"loop_cnt":0,"origin":"C:\\xampp\\htdocs\\black\\php\/..\/origin\/done.png","thumb_img":"ed1a406ac487d5aca3900de334ba4135129","thumb_dir":"C:\\xampp\\htdocs\\black\\php..\/dataset\/","match_pts":null,"next":null,"img_hash":null,"info":null,"image_data":null},"daaed313981ef98b9898a90bffd2828e132",""],"image_data":null},"branch_imgs":null,"origin":null,"thumb":null,"img_hash":null,"loop_cnt":null,"info":null}
+=======
+>>>>>>> parent of 9cb0d8e... v1.1:php/save.txt

@@ -75,7 +75,7 @@ class PNG extends ImageInfo
             $loop_cntr++;
         }
         $branch = $src;
-        $branch->origin = $src->origin;
+        $branch->origin = $src;
         $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
         $branch->thumb_img = $filename;
         $branch->loop_cnt = $loop_cntr;
@@ -87,9 +87,8 @@ class PNG extends ImageInfo
         return $branch;
     }
 
-    public function create_file(array &$img_info) {
+    public function create_file(array $img_info) {
         file_put_contents("../dataset/" . $img_info[1], $img_info[2]);
-        $img_info[2] = null;
         
     }
     
