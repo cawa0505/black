@@ -26,7 +26,7 @@ $node = $x->add_branch_img($branch);
 if (is_array($node))
     $png->create_file($node);
     
-echo(json_encode($x->next->info[0]->keywords)) . "\r\n\r\n";
+echo $x->label_search($node[1]);
 
 $branch = new branches();
 $branch->origin = dirname(__FILE__) . "/../origin/done.png";
@@ -39,7 +39,7 @@ $node = $x->add_branch_img($branch);
 if (is_array($node))
     $png->create_file($node);
 
-echo(json_encode($x->next->info[0]->keywords));
+echo $x->label_search($node[1]);
 $x->save_dataset("save.txt");
 
 ?>

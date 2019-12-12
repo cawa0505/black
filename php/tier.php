@@ -24,7 +24,7 @@ class tier
 
     public function new_link(ImageInfo $img)
     {
-        
+
         $head = $this->next;
         if ($head == null) {
             $head = new tier();
@@ -51,13 +51,14 @@ class tier
     public function add_branch_img(Branches &$node)
     {
         $png = new PNG();
-        $cnode = $png->find_tier($node, 2); 
-        
-        if ($this->search_imgs($cnode) == 0)
+        $cnode = $png->find_tier($node, 2);
+
+        if ($this->search_imgs($cnode) == 0) {
             return $cnode;
-        
+        }
+
         echo "++++";
-        
+
         $head = $this->info;
         if ($head == null) {
             $head = new Branches();
@@ -98,7 +99,8 @@ class tier
         $this->next = $head;
     }
 
-    public function convImg2Branch(ImageInfo $input) {
+    public function convImg2Branch(ImageInfo $input)
+    {
         $output = new Branches();
         foreach ($input as $key => $value) {
             $output->$key = $value;
@@ -106,7 +108,8 @@ class tier
         return $output;
     }
 
-    public function convBranch2Img(Branches $input) {
+    public function convBranch2Img(Branches $input)
+    {
         $output = new ImageInfo();
         foreach ($input as $key => $value) {
             $output->$key = $value;
@@ -120,8 +123,10 @@ class tier
         $found = 0;
         foreach (scandir(dirname(__FILE__) . "/../dataset/") as $file) {
             // Saved file
-            if ($file[0] == '.')
+            if ($file[0] == '.') {
                 continue;
+            }
+
             $svf = file_get_contents(dirname(__FILE__) . "/../dataset/" . $file);
             if ($bri == $svf) {
                 //unlink(dirname(__FILE__) . "/../dataset/" . $imginfo->thumb_img);
@@ -131,12 +136,21 @@ class tier
                 return 1;
             }
         }
-        if ($found == 1)
+        if ($found == 1) {
             return 1;
-        else
+        } else {
             return 0;
+        }
+
+    }
+
+    public function label_search($filename)
+    {
+        $head = $this->next;
+        while ($head != null && $head->thumb_img != $filename) {
+            $this->load_next($head);
+        }
+        return json_encode($head->info[0]->keywords);
     }
 
 }
-
-?>
