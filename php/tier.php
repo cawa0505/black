@@ -34,7 +34,7 @@ class tier
             return;
         }
         while ($head->next != null) {
-            $this->load_next($head);
+            load_next($head);
         }
 
         $head->next = new tier();
@@ -52,13 +52,12 @@ class tier
     {
         $png = new PNG();
         $node = $png->find_tier($node->origin, true);
-        
         //$node = $this->convImg2Branch($imginfo);
         if ($this->search_imgs($node) == 0)
             return 0;
         echo "++++";
         
-        $head = $this->next->info;
+        $head = $this->next;
         if ($head == null) {
             $head = new Branches();
             $head->next = null;
@@ -67,7 +66,7 @@ class tier
             return;
         }
         while ($head->next != null) {
-            $this->load_next($head);
+            load_next($head);
         }
 
         $head->next = new Branches();
@@ -92,7 +91,7 @@ class tier
         $node = json_decode($file);
         $head = new tier();
         do {
-            $this->load_next($node);
+            $head->next = load_next($node);
         } while ($this->next != null);
         $this->next = $head;
     }
@@ -144,30 +143,24 @@ $x = new tier();
 $png = new PNG();
 $imginfo = new ImageInfo();
 
-$x->load_dataset("save.txt");
+//$imginfo = $png->find_tier( dirname(__FILE__) . "/../origin/baselinedesc.png", true);
 
-//$x->new_link($imginfo);
 $branch = new branches();
 $branch->origin = dirname(__FILE__) . "/../origin/baselinedesc.png";
 $branch->thumb_dir = dirname(__FILE__) . "/../dataset/";
 $branch->next = null;
 
-$branch->keywords = array("1", "baseline pic");
+$branch->keywords = array("1", "done pic");
 
-$x->new_link($imginfo);
 $x->add_branch_img($branch);
 
 $branch = new branches();
 $branch->origin = dirname(__FILE__) . "/../origin/done.png";
 $branch->thumb_dir = dirname(__FILE__) . "/../dataset/";
 $branch->next = null;
-//$x->search_imgs($branch);
 
 $branch->keywords = array("1", "done pic");
-//$imginfo = $png->find_tier($branch->origin);
 
-$x->new_link($imginfo);
 $x->add_branch_img($branch);
-
 echo json_encode($x);
 $x->save_dataset("save.txt");

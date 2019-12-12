@@ -4,12 +4,15 @@
 // $this->ext->info = ImageInfo();
 class ImageInfo {
 
-
     public $keywords;
-    public $branch_imgs;
+    public $loop_cnt;
     public $origin;
-    public $thumb_dir;
     public $thumb_img;
+    public $thumb_dir;
+    public $match_pts;
+    public $next;
+    public $img_hash;
+    public $info;
     
 }
 
