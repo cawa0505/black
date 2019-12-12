@@ -57,8 +57,6 @@ class tier
             return $cnode;
         }
 
-        echo "++++";
-
         $head = $this->info;
         if ($head == null) {
             $head = new Branches();
@@ -122,15 +120,12 @@ class tier
         $bri = $input[2];
         $found = 0;
         foreach (scandir(dirname(__FILE__) . "/../dataset/") as $file) {
-            // Saved file
             if ($file[0] == '.') {
                 continue;
             }
-
+            // Saved file
             $svf = file_get_contents(dirname(__FILE__) . "/../dataset/" . $file);
             if ($bri == $svf) {
-                //unlink(dirname(__FILE__) . "/../dataset/" . $imginfo->thumb_img);
-                echo '*****************';
                 $input[0]->thumb_img = $file;
                 $input[2] = "";
                 return 1;
