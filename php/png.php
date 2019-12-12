@@ -5,7 +5,7 @@ include_once dirname(__FILE__) . "/imageinfo.php";
 class PNG extends ImageInfo
 {
 
-    public function find_tier($src, bool $new_file = false)
+    public function find_tier($src, int $new_file = 0)
     {
         list($width, $height, $type, $attr) = getimagesize($src);
 
@@ -61,15 +61,15 @@ class PNG extends ImageInfo
                         break 2;
                     }
                 }
-                file_put_contents("../dataset/" . $filename, $img_scaled);
+                //file_put_contents("../dataset/" . $filename, $img_scaled);
                 break;
             }
             // if $exp_first and $exp_second have ~35 point token congruencies
             // it's still matching enough.
-            imagescale($scale, $width * 0.8);
+            imagescale($scale, $width * 0.20);
             //imagepng($scale, "../dataset/" . $filename . $loop_cntr);
             $img_scaled = file_get_contents("../dataset/" . $filename . $loop_cntr);
-            //unlink("../dataset/" . $filename . $loop_cntr);
+            unlink("../dataset/" . $filename . $loop_cntr);
             $hex = bin2hex($img_scaled);
             $exp_second = explode("000000", $img_scaled);
             $loop_cntr++;
@@ -78,13 +78,20 @@ class PNG extends ImageInfo
         $branch->origin = $src;
         $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
         $branch->thumb_img = $filename;
-        //unlink("../dataset/" . $filename . $loop_cntr);
-        //if ($new_file)
-        //    file_put_contents("../dataset/" . $filename, $img_scaled);
         $branch->loop_cnt = $loop_cntr;
+        //unlink("../dataset/" . $filename . $loop_cntr);
+        if ($new_file == 1)
+            file_put_contents("../dataset/" . $filename, $img_scaled);
+        if ($new_file == 2)
+            return array($branch, $filename, $img_scaled);
         return $branch;
     }
 
+    public function create_file(array $img_info) {
+        file_put_contents("../dataset/" . $img_info[1], $img_info[2]);
+        
+    }
+    
     public function resize_png($src, $dst, $dstw, $dsth)
     {
         list($width, $height, $type, $attr) = getimagesize($src);

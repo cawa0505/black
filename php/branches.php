@@ -11,6 +11,7 @@ class branches {
     public $next;
     public $img_hash;
     public $info;
+    public $image_data;
 }
 
 ?>

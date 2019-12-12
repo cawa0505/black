@@ -44,24 +44,25 @@ class tier
 
     public function insert_branch(Branches $img)
     {
-        $this->next->info->branch_imgs = $img;
-        $this->next->info->branch_imgs->next = null;
+        $this->next->info = $img;
+        $this->next->info->next = null;
     }
 
     public function add_branch_img(Branches $node)
     {
         $png = new PNG();
-        $node = $png->find_tier($node->origin, true);
+        $cnode = $png->find_tier($node->origin, 2);
         //$node = $this->convImg2Branch($imginfo);
-        if ($this->search_imgs($node) == 0)
-            return 0;
+        if ($this->search_imgs($cnode) == 0)
+            return $cnode;
+        
         echo "++++";
         
         $head = $this->next;
         if ($head == null) {
             $head = new Branches();
             $head->next = null;
-            $head->info = $node;
+            $head->info = $cnode;
             $this->next = $head;
             return;
         }
@@ -70,7 +71,8 @@ class tier
         }
 
         $head->next = new Branches();
-        $head->next->info = $node;
+        $head->next->info = $cnode[0];
+        $head->next->info->next = null;
         $this->next = $head;
     }
 
@@ -112,11 +114,9 @@ class tier
         return $output;
     }
 
-    public function search_imgs(Branches &$branch, bool $new_tier = false)
+    public function search_imgs(array &$input)
     {
-        $imginfo = $this->convBranch2Img($branch);
-        $bri = file_get_contents(dirname(__FILE__) . "/../dataset/" . $imginfo->thumb_img);
-        $node = null;
+        $bri = $input[2];
         $found = 0;
         foreach (scandir(dirname(__FILE__) . "/../dataset/") as $file) {
             // Saved file
@@ -126,9 +126,8 @@ class tier
             if ($bri == $svf) {
                 //unlink(dirname(__FILE__) . "/../dataset/" . $imginfo->thumb_img);
                 echo '*****************';
-                $branch->thumb_img = $file;
-                $found = 1;
-                break;
+                $input[0]->thumb_img = $file;
+                return 1;
             }
         }
         if ($found == 1)
@@ -152,7 +151,14 @@ $branch->next = null;
 
 $branch->keywords = array("1", "done pic");
 
-$x->add_branch_img($branch);
+//returns array is file unfound
+// [0] = branches()
+// [1] = filename
+// [2] = file contents
+$node = $x->add_branch_img($branch);
+if (is_array($node))
+    $png->create_file($node);
+echo json_encode($x);
 
 $branch = new branches();
 $branch->origin = dirname(__FILE__) . "/../origin/done.png";
@@ -161,6 +167,8 @@ $branch->next = null;
 
 $branch->keywords = array("1", "done pic");
 
-$x->add_branch_img($branch);
+$node = $x->add_branch_img($branch);
+if (is_array($node))
+    $png->create_file($node);
 echo json_encode($x);
 $x->save_dataset("save.txt");
