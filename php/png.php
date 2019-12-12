@@ -79,7 +79,6 @@ class PNG extends ImageInfo
         $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
         $branch->thumb_img = $filename;
         $branch->loop_cnt = $loop_cntr;
-        //unlink("../dataset/" . $filename . $loop_cntr);
         if ($new_file == 1)
             file_put_contents("../dataset/" . $filename, $img_scaled);
         if ($new_file == 2)
