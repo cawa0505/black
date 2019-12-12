@@ -118,6 +118,8 @@ class tier
     public function search_imgs(array &$input)
     {
         $bri = $input[2];
+        $bri_array = explode("000", $bri);
+        $bri_len = count($bri_array);
         $found = 0;
         foreach (scandir(dirname(__FILE__) . "/../dataset/") as $file) {
             if ($file[0] == '.') {
@@ -125,7 +127,15 @@ class tier
             }
             // Saved file
             $svf = file_get_contents(dirname(__FILE__) . "/../dataset/" . $file);
-            if ($bri == $svf) {
+            $svf_array = explode("000", $svf);
+            $k_neighbor = false;
+            
+            $intersect = array_intersect($bri_array, $svf_array);
+            if (count($intersect) / ($bri_len + count($svf_array)) > 0.37) {
+                $k_neighbor = true;
+            }
+            
+            if ($k_neighbor) {
                 $input[0]->thumb_img = $file;
                 $input[2] = "";
                 return 1;
