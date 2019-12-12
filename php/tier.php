@@ -51,7 +51,7 @@ class tier
     public function add_branch_img(Branches $node)
     {
         $png = new PNG();
-        $cnode = $png->find_tier($node->origin, 2);
+        $cnode = $png->find_tier($node, 2);
         //$node = $this->convImg2Branch($imginfo);
         if ($this->search_imgs($cnode) == 0)
             return $cnode;
@@ -138,37 +138,4 @@ class tier
 
 }
 
-$x = new tier();
-$png = new PNG();
-$imginfo = new ImageInfo();
-
-//$imginfo = $png->find_tier( dirname(__FILE__) . "/../origin/baselinedesc.png", true);
-
-$branch = new branches();
-$branch->origin = dirname(__FILE__) . "/../origin/baselinedesc.png";
-$branch->thumb_dir = dirname(__FILE__) . "/../dataset/";
-$branch->next = null;
-
-$branch->keywords = array("1", "done pic");
-
-//returns array is file unfound
-// [0] = branches()
-// [1] = filename
-// [2] = file contents
-$node = $x->add_branch_img($branch);
-if (is_array($node))
-    $png->create_file($node);
-echo json_encode($x);
-
-$branch = new branches();
-$branch->origin = dirname(__FILE__) . "/../origin/done.png";
-$branch->thumb_dir = dirname(__FILE__) . "/../dataset/";
-$branch->next = null;
-
-$branch->keywords = array("1", "done pic");
-
-$node = $x->add_branch_img($branch);
-if (is_array($node))
-    $png->create_file($node);
-echo json_encode($x);
-$x->save_dataset("save.txt");
+?>

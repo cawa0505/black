@@ -7,7 +7,7 @@ class PNG extends ImageInfo
 
     public function find_tier($src, int $new_file = 0)
     {
-        list($width, $height, $type, $attr) = getimagesize($src);
+        list($width, $height, $type, $attr) = getimagesize($src->origin);
 
         $filename = md5(microtime()) . rand(rand(0, 125), rand(125, 232));
 
@@ -74,7 +74,7 @@ class PNG extends ImageInfo
             $exp_second = explode("000000", $img_scaled);
             $loop_cntr++;
         }
-        $branch = new Branches();
+        $branch = $src;
         $branch->origin = $src;
         $branch->thumb_dir = dirname(__FILE__) . "../dataset/";
         $branch->thumb_img = $filename;
@@ -94,8 +94,8 @@ class PNG extends ImageInfo
     
     public function resize_png($src, $dst, $dstw, $dsth)
     {
-        list($width, $height, $type, $attr) = getimagesize($src);
-        $im = imagecreatefrompng($src);
+        list($width, $height, $type, $attr) = getimagesize($src->origin);
+        $im = imagecreatefrompng($src->origin);
         $tim = imagecreatetruecolor($dstw, $dsth);
         imagecopyresampled($tim, $im, 0, 0, 0, 0, $dstw, $dsth, $width, $height);
         $tim = $this->ImageTrueColorToPalette2($tim, false, 2);
