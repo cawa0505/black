@@ -48,17 +48,17 @@ class tier
         $this->next->info->next = null;
     }
 
-    public function add_branch_img(Branches $node)
+    public function add_branch_img(Branches &$node)
     {
         $png = new PNG();
-        $cnode = $png->find_tier($node, 2);
-        //$node = $this->convImg2Branch($imginfo);
+        $cnode = $png->find_tier($node, 2); 
+        
         if ($this->search_imgs($cnode) == 0)
             return $cnode;
         
         echo "++++";
         
-        $head = $this->next;
+        $head = $this->info;
         if ($head == null) {
             $head = new Branches();
             $head->next = null;
@@ -127,6 +127,7 @@ class tier
                 //unlink(dirname(__FILE__) . "/../dataset/" . $imginfo->thumb_img);
                 echo '*****************';
                 $input[0]->thumb_img = $file;
+                $input[2] = "";
                 return 1;
             }
         }

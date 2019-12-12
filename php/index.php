@@ -16,7 +16,7 @@ $branch->origin = dirname(__FILE__) . "/../origin/baselinedesc.png";
 $branch->thumb_dir = dirname(__FILE__) . "/../dataset/";
 $branch->next = null;
 
-$branch->keywords = array("1", "done pic");
+$branch->keywords = array("2", "baseline pic");
 
 //returns array is file unfound
 // [0] = branches()
@@ -25,7 +25,8 @@ $branch->keywords = array("1", "done pic");
 $node = $x->add_branch_img($branch);
 if (is_array($node))
     $png->create_file($node);
-echo json_encode($x);
+    
+echo(json_encode($x->next->info[0]->keywords)) . "\r\n\r\n";
 
 $branch = new branches();
 $branch->origin = dirname(__FILE__) . "/../origin/done.png";
@@ -37,7 +38,8 @@ $branch->keywords = array("1", "done pic");
 $node = $x->add_branch_img($branch);
 if (is_array($node))
     $png->create_file($node);
-echo json_encode($x);
+
+echo(json_encode($x->next->info[0]->keywords));
 $x->save_dataset("save.txt");
 
 ?>
